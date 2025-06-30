@@ -8,9 +8,11 @@ public class PessoaVO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
     private String nome;
+    private String endereco;
     private Integer idade;
     private String email;
     private Date data;
+    private Date dataCadastro;
     private String tipoDocumento; // "CPF" ou "CNPJ"
     private String numeroCPF;
     private String numeroCNPJ;
@@ -18,12 +20,14 @@ public class PessoaVO implements Serializable {
     private Date dataManutencao;
     private Boolean ativo = true;
 
-    public PessoaVO(Long id,String nome, Integer idade, String email, Date data, String tipoDocumento, String numeroCNPJ, String numeroCPF, Date dataManutencao, String motivoManutencao, Boolean ativo) {
+    public PessoaVO(Long id,String nome, String endereco, Integer idade, String email, Date data, Date dataCadastro, String tipoDocumento, String numeroCNPJ, String numeroCPF, Date dataManutencao, String motivoManutencao, Boolean ativo) {
         this.id = id;
         this.nome = nome;
+        this.endereco = endereco;
         this.idade = idade;
         this.email = email;
         this.data = data;
+        this.dataCadastro = dataCadastro;
         this.tipoDocumento = tipoDocumento;
         this.numeroCNPJ = numeroCNPJ;
         this.numeroCPF = numeroCPF;
@@ -123,15 +127,31 @@ public class PessoaVO implements Serializable {
         this.id = id;
     }
 
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public Date getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(Date dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PessoaVO pessoaVO = (PessoaVO) o;
-        return Objects.equals(id, pessoaVO.id) && Objects.equals(nome, pessoaVO.nome) && Objects.equals(idade, pessoaVO.idade) && Objects.equals(email, pessoaVO.email) && Objects.equals(data, pessoaVO.data) && Objects.equals(tipoDocumento, pessoaVO.tipoDocumento) && Objects.equals(numeroCPF, pessoaVO.numeroCPF) && Objects.equals(numeroCNPJ, pessoaVO.numeroCNPJ) && Objects.equals(motivoManutencao, pessoaVO.motivoManutencao) && Objects.equals(dataManutencao, pessoaVO.dataManutencao) && Objects.equals(ativo, pessoaVO.ativo);
+        return Objects.equals(id, pessoaVO.id) && Objects.equals(nome, pessoaVO.nome) && Objects.equals(endereco, pessoaVO.endereco) && Objects.equals(idade, pessoaVO.idade) && Objects.equals(email, pessoaVO.email) && Objects.equals(data, pessoaVO.data) && Objects.equals(dataCadastro, pessoaVO.dataCadastro) && Objects.equals(tipoDocumento, pessoaVO.tipoDocumento) && Objects.equals(numeroCPF, pessoaVO.numeroCPF) && Objects.equals(numeroCNPJ, pessoaVO.numeroCNPJ) && Objects.equals(motivoManutencao, pessoaVO.motivoManutencao) && Objects.equals(dataManutencao, pessoaVO.dataManutencao) && Objects.equals(ativo, pessoaVO.ativo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, idade, email, data, tipoDocumento, numeroCPF, numeroCNPJ, motivoManutencao, dataManutencao, ativo);
+        return Objects.hash(id, nome, endereco, idade, email, data, dataCadastro, tipoDocumento, numeroCPF, numeroCNPJ, motivoManutencao, dataManutencao, ativo);
     }
 }

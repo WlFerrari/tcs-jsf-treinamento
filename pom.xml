@@ -18,6 +18,17 @@
       <scope>test</scope>
     </dependency>
 
+    <!--  Dependência PDF e Excel  -->
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+      <version>2.0.31</version> </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.3</version>
+    </dependency>
+
     <!-- Dependência do JSF -->
     <dependency>
       <groupId>org.glassfish</groupId>
@@ -99,8 +110,16 @@
         <version>2.2</version>
         <configuration>
           <path>/tcs-jsf-treinamento</path>
-          <port>8080</port>
+          <port>8082</port>
           <defaultContextFile>${basedir}/src/main/webapp/META-INF/context.xml</defaultContextFile>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>16</source>
+          <target>16</target>
         </configuration>
       </plugin>
     </plugins>

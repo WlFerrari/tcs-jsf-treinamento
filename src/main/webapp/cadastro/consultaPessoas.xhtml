@@ -11,6 +11,39 @@
 
     <ui:define name="content">
         <h:form id="formConsulta">
+
+            <!-- Dialog para envio de E-mail individual -->
+            <p:dialog header="Enviar E-mail"
+                      widgetVar="emailDialog"
+                      modal="true"
+                      closable="true"
+                      resizable="false"
+                      draggable="false"
+                      width="500">
+
+                <h:panelGrid columns="2" cellpadding="5" style="width:100%;">
+                    <h:outputLabel value="Para:" />
+                    <h:outputText value="#{consultaPessoaBean.pessoaSelecionada.email}" />
+
+                    <h:outputLabel value="Assunto:" />
+                    <p:inputText value="#{consultaPessoaBean.assuntoEmail}" style="width:100%;" />
+
+                    <h:outputLabel value="Mensagem:" style="vertical-align:top;" />
+                    <p:inputTextarea value="#{consultaPessoaBean.mensagemEmail}" rows="6" style="width:100%;" />
+                </h:panelGrid>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Enviar" icon="pi pi-send"
+                                     actionListener="#{consultaPessoaBean.enviarEmailComMensagem}"
+                                     update="@form"
+                                     oncomplete="PF('emailDialog').hide()" />
+
+                    <p:commandButton value="Cancelar" icon="pi pi-times"
+                                     onclick="PF('emailDialog').hide(); return false;" />
+                </f:facet>
+            </p:dialog>
+
+            <!-- Painel com DataTable -->
             <p:panel header="Lista de Pessoas Cadastradas" style="width:100%; margin:0 auto;">
                 <p:messages showDetail="true" closable="true" />
 
@@ -32,6 +65,10 @@
                                 #{p.nome}
                             </p:column>
 
+                            <p:column headerText="Endereço" style="width:25%;">
+                                #{p.endereco}
+                            </p:column>
+
                             <p:column headerText="Idade" style="width:6%; text-align:center;">
                                 #{p.idade}
                             </p:column>
@@ -42,6 +79,12 @@
 
                             <p:column headerText="Data de Nascimento" style="width:12%;">
                                 <h:outputText value="#{p.data}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Data de Cadastro" style="width:12%;">
+                                <h:outputText value="#{p.dataCadastro}">
                                     <f:convertDateTime pattern="dd/MM/yyyy" />
                                 </h:outputText>
                             </p:column>
@@ -68,36 +111,81 @@
                                                      styleClass="ui-button-secondary"
                                                      style="width:140px;"
                                                      update="@form" />
+
                                     <p:commandButton value="Excluir"
                                                      action="#{consultaPessoaBean.prepararExclusao(p)}"
                                                      icon="pi pi-trash"
                                                      styleClass="ui-button-secondary"
                                                      style="width:140px;"
                                                      update="@form" />
+
+                                    <p:commandButton value="E-mail"
+                                                     icon="pi pi-envelope"
+                                                     action="#{consultaPessoaBean.abrirDialogEmail(p)}"
+                                                     process="@form"
+                                                     update="@form"
+                                                     oncomplete="PF('emailDialog').show();"
+                                                     styleClass="ui-button-info" />
                                 </div>
                             </p:column>
-
                         </p:dataTable>
 
                         <br/>
 
                         <div style="text-align: right;">
+                            <p:commandButton value="Ver E-mails"
+                                             action="#{consultaPessoaBean.verEmails}"
+                                             icon="pi pi-eye"
+                                             update="dialogEmails"
+                                             process="@this"
+                                             styleClass="ui-button-secondary"
+                                             style="margin-right:10px;" />
+
                             <p:commandButton value="Exportar PDF"
                                              action="#{consultaPessoaBean.exportarPdf}"
                                              icon="pi pi-file-pdf"
                                              styleClass="ui-button-secondary"
-                                             style="margin-right:10px;" />
+                                             style="margin-right:10px;"
+                                             ajax="false" />
+
                             <p:commandButton value="Exportar Excel"
                                              action="#{consultaPessoaBean.exportarExcel}"
                                              icon="pi pi-file-excel"
-                                             styleClass="ui-button-secondary" />
+                                             styleClass="ui-button-secondary"
+                                             style="margin-right: 10px"
+                                             ajax="false" />
                         </div>
-
                     </div>
                 </div>
-
             </p:panel>
         </h:form>
+
+        <!-- Dialog para listar e-mails (fora do form para evitar conflito com update) -->
+        <p:dialog header="Mensagens Enviadas"
+                  widgetVar="dialogEmails"
+                  modal="true"
+                  resizable="false"
+                  draggable="false"
+                  id="dialogEmails"
+                  closable="true"
+                  width="600"
+                  style="max-height:400px; overflow:auto;">
+
+            <ui:repeat value="#{consultaPessoaBean.emailsEnviados}" var="email">
+                <p:panel style="margin-bottom:10px;">
+                    <p:outputLabel value="Para: #{email.destinatario}" style="display:block; font-weight:bold;" />
+                    <p:outputLabel value="Assunto: #{email.assunto}" style="display:block;" />
+                    <p:outputLabel value="Mensagem:" style="display:block; margin-top:5px;" />
+                    <p:outputLabel value="#{email.mensagem}" escape="false" style="display:block; margin-bottom:5px;" />
+                    <p:outputLabel value="Data de envio:">
+                        <h:outputText value="#{email.dataEnvio}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </p:outputLabel>
+                </p:panel>
+            </ui:repeat>
+        </p:dialog>
+
     </ui:define>
 
     <ui:define name="footer">

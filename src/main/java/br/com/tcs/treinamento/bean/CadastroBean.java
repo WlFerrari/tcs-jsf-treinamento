@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import br.com.tcs.treinamento.entity.Pessoa;
 import br.com.tcs.treinamento.model.PessoaVO;
 import br.com.tcs.treinamento.service.PessoaService;
@@ -36,9 +37,11 @@ public class CadastroBean implements Serializable {
         // Converte o VO para a entidade Pessoa
         Pessoa pessoa = new Pessoa();
         pessoa.setNome(cadastrarPessoa.getNome());
+        pessoa.setEndereco(cadastrarPessoa.getEndereco());
         pessoa.setIdade(cadastrarPessoa.getIdade());
         pessoa.setEmail(cadastrarPessoa.getEmail());
         pessoa.setData(cadastrarPessoa.getData());
+        pessoa.setDataCadastro(cadastrarPessoa.getDataCadastro());
         pessoa.setTipoDocumento(cadastrarPessoa.getTipoDocumento());
         pessoa.setNumeroCPF(cadastrarPessoa.getNumeroCPF());
         pessoa.setNumeroCNPJ(cadastrarPessoa.getNumeroCNPJ());
@@ -59,9 +62,11 @@ public class CadastroBean implements Serializable {
 
     public void limpar() {
         cadastrarPessoa.setNome(null);
+        cadastrarPessoa.setEndereco(null);
         cadastrarPessoa.setIdade(null);
         cadastrarPessoa.setEmail(null);
         cadastrarPessoa.setData(null);
+        cadastrarPessoa.setDataCadastro(null);
         cadastrarPessoa.setTipoDocumento(null);
         cadastrarPessoa.setNumeroCPF(null);
         cadastrarPessoa.setNumeroCNPJ(null);
@@ -74,6 +79,9 @@ public class CadastroBean implements Serializable {
         if (cadastrarPessoa.getNome() == null || cadastrarPessoa.getNome().trim().isEmpty()) {
             erros.add("Nome não informado.");
         }
+        if (cadastrarPessoa.getEndereco() == null || cadastrarPessoa.getEndereco().trim().isEmpty()) {
+            erros.add("Endereço não informado.");
+        }
         if (cadastrarPessoa.getIdade() == null) {
             erros.add("Idade não informada.");
         }
@@ -83,6 +91,8 @@ public class CadastroBean implements Serializable {
         if (cadastrarPessoa.getData() == null) {
             erros.add("Data de nascimento não informada.");
         }
+        if (cadastrarPessoa.getDataCadastro() == null)
+            erros.add("Data de Cadastro não informada.");
         if (cadastrarPessoa.getTipoDocumento() == null || cadastrarPessoa.getTipoDocumento().trim().isEmpty()) {
             erros.add("Tipo de documento não informado.");
         } else {

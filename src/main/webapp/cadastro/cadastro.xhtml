@@ -5,6 +5,8 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
+
+
     <ui:define name="title">
         Cadastro de Pessoa
     </ui:define>
@@ -22,21 +24,28 @@
 
                 <!-- Formulário com painel de duas colunas -->
                 <p:panelGrid columns="2" columnClasses="label,value" style="width:100%; margin-bottom:1em;">
-                    <p:outputLabel for="nome" value="Nome Completo:"
-                                   style="text-align: left; white-space: nowrap;" />
+                    <p:outputLabel for="nome" value="Nome Completo:" />
                     <p:inputText id="nome" value="#{cadastroBean.cadastrarPessoa.nome}"
-                                 style="width:100%;" />
+                                 style="width:100%;"  />
 
-                    <p:outputLabel for="idade" value="Idade:" styleClass="label" />
+                    <p:outputLabel for="endereco" value="Endereço:" />
+                    <p:inputText id="endereco" value="#{cadastroBean.cadastrarPessoa.endereco}"
+                                 style="width:100%;"  />
+
+                    <p:outputLabel for="idade" value="Idade:" />
                     <p:inputText id="idade" value="#{cadastroBean.cadastrarPessoa.idade}"
-                                 style="width:4em;" />
+                                 style="width:4em;"  />
 
-                    <p:outputLabel for="email" value="E-mail:" styleClass="label" />
+                    <p:outputLabel for="email" value="E-mail:" />
                     <p:inputText id="email" value="#{cadastroBean.cadastrarPessoa.email}"
-                                 style="width:100%;" />
+                                 style="width:100%;"  />
 
                     <p:outputLabel for="data" value="Data de Nascimento:" styleClass="label" />
                     <p:calendar id="data" value="#{cadastroBean.cadastrarPessoa.data}"
+                                pattern="dd/MM/yyyy" showIcon="true" />
+
+                    <p:outputLabel for="dataCadastro" value="Data de Cadastro:" styleClass="label" />
+                    <p:calendar id="dataCadastro" value="#{cadastroBean.cadastrarPessoa.dataCadastro}"
                                 pattern="dd/MM/yyyy" showIcon="true" />
 
                     <p:outputLabel for="tipo" value="Tipo de Documento:" styleClass="label" />

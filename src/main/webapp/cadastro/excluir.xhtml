@@ -25,6 +25,9 @@
                     <p:outputLabel for="nome" value="Nome Completo:" style="text-align:left; white-space:nowrap;" />
                     <h:outputText id="nome" value="#{consultaPessoaBean.pessoaSelecionada.nome}" />
 
+                    <p:outputLabel for="endereco" value="Endereço:" style="text-align:left; white-space:nowrap;" />
+                    <h:outputText id="endereco" value="#{consultaPessoaBean.pessoaSelecionada.endereco}" />
+
                     <p:outputLabel for="idade" value="Idade:" />
                     <h:outputText id="idade" value="#{consultaPessoaBean.pessoaSelecionada.idade}" />
 
@@ -34,6 +37,11 @@
                     <p:outputLabel for="data" value="Data de Nascimento:" />
                     <h:outputText id="data">
                         <f:convertDateTime pattern="dd/MM/yyyy" value="#{consultaPessoaBean.pessoaSelecionada.data}" />
+                    </h:outputText>
+
+                    <p:outputLabel for="dataCadastro" value="Data de Cadastro:" />
+                    <h:outputText id="dataCadastro">
+                        <f:convertDateTime pattern="dd/MM/yyyy" value="#{consultaPessoaBean.pessoaSelecionada.dataCadastro}" />
                     </h:outputText>
 
                     <p:outputLabel for="tipo" value="Tipo de Documento:" />

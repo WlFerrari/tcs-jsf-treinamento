@@ -20,6 +20,9 @@ public class Pessoa implements Serializable {
     @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = false)
+    private String endereco;
+
     // Idade da pessoa
     private Integer idade;
 
@@ -30,6 +33,9 @@ public class Pessoa implements Serializable {
     // Data de nascimento (utiliza somente a data, sem horário)
     @Temporal(TemporalType.DATE)
     private Date data;
+
+    @Temporal(TemporalType.DATE)
+    private Date dataCadastro;
 
     // Indica se o documento é CPF ou CNPJ
     private String tipoDocumento;
@@ -55,12 +61,14 @@ public class Pessoa implements Serializable {
     }
 
     // Construtor completo (opcional para facilitar a criação)
-    public Pessoa(String nome, Integer idade, String email, Date data, String tipoDocumento,
+    public Pessoa(String nome, String endereco, Integer idade, String email, Date data, Date dataCadastro, String tipoDocumento,
                   String numeroCPF, String numeroCNPJ, String motivoManutencao, Date dataManutencao, Boolean ativo) {
         this.nome = nome;
+        this.endereco = endereco;
         this.idade = idade;
         this.email = email;
         this.data = data;
+        this.dataCadastro = dataCadastro;
         this.tipoDocumento = tipoDocumento;
         this.numeroCPF = numeroCPF;
         this.numeroCNPJ = numeroCNPJ;
@@ -159,6 +167,21 @@ public class Pessoa implements Serializable {
         this.ativo = ativo;
     }
 
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public Date getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(Date dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
     // equals e hashCode baseados no id (único identificador)
 
     @Override
@@ -181,9 +204,11 @@ public class Pessoa implements Serializable {
         return "Pessoa{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
+                ", endereco='" + endereco + '\'' +
                 ", idade=" + idade +
                 ", email='" + email + '\'' +
                 ", data=" + data +
+                ", dataCasdastro=" + dataCadastro +
                 ", tipoDocumento='" + tipoDocumento + '\'' +
                 ", numeroCPF='" + numeroCPF + '\'' +
                 ", numeroCNPJ='" + numeroCNPJ + '\'' +
