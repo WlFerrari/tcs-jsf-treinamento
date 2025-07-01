@@ -11,21 +11,34 @@
 
     <ui:define name="content">
         <h:form id="formExclusao">
-            <!-- Inclui o modal de confirmação para exclusão (confirmarModel.xhtml atualizado) -->
-            <ui:include src="/model/confirmarExclusaoModel.xhtml">
-                <ui:param name="modalBean" value="#{consultaPessoaBean}" />
-            </ui:include>
 
+            <!-- Inclui o modal de confirmação para exclusão -->
+            <p:confirmDialog widgetVar="exclusionConfirmDialog"
+                             header="Confirmar Exclusão"
+                             message="Tem certeza que deseja excluir esta pessoa definitivamente?"
+                             severity="warn"
+                             showEffect="fade" hideEffect="fade"
+                             closable="false">
+
+                <p:commandButton value="Sim"
+                                 action="#{consultaPessoaBean.excluirPessoa}"
+                                 icon="pi pi-check"
+                                 ajax="false" />
+
+                <p:commandButton value="Não"
+                                 type="button"
+                                 onclick="PF('exclusionConfirmDialog').hide()"
+                                 icon="pi pi-times"
+                                 styleClass="ui-button-secondary" />
+            </p:confirmDialog>
             <p:panel header="Formulário de Exclusão" style="width:600px;">
-                <!-- Mensagens Gerais -->
                 <p:messages showDetail="true" closable="true" />
 
-                <!-- Painel de Dados da Pessoa (somente leitura) -->
                 <p:panelGrid columns="2" columnClasses="label,value" style="width:100%; margin-bottom:1em;">
-                    <p:outputLabel for="nome" value="Nome Completo:" style="text-align:left; white-space:nowrap;" />
+                    <p:outputLabel for="nome" value="Nome Completo:" />
                     <h:outputText id="nome" value="#{consultaPessoaBean.pessoaSelecionada.nome}" />
 
-                    <p:outputLabel for="endereco" value="Endereço:" style="text-align:left; white-space:nowrap;" />
+                    <p:outputLabel for="endereco" value="Endereço:" />
                     <h:outputText id="endereco" value="#{consultaPessoaBean.pessoaSelecionada.endereco}" />
 
                     <p:outputLabel for="idade" value="Idade:" />
@@ -36,12 +49,14 @@
 
                     <p:outputLabel for="data" value="Data de Nascimento:" />
                     <h:outputText id="data">
-                        <f:convertDateTime pattern="dd/MM/yyyy" value="#{consultaPessoaBean.pessoaSelecionada.data}" />
+                        <f:convertDateTime pattern="dd/MM/yyyy"
+                                           value="#{consultaPessoaBean.pessoaSelecionada.data}" />
                     </h:outputText>
 
                     <p:outputLabel for="dataCadastro" value="Data de Cadastro:" />
                     <h:outputText id="dataCadastro">
-                        <f:convertDateTime pattern="dd/MM/yyyy" value="#{consultaPessoaBean.pessoaSelecionada.dataCadastro}" />
+                        <f:convertDateTime pattern="dd/MM/yyyy"
+                                           value="#{consultaPessoaBean.pessoaSelecionada.dataCadastro}" />
                     </h:outputText>
 
                     <p:outputLabel for="tipo" value="Tipo de Documento:" />
@@ -58,20 +73,31 @@
                                   value="#{consultaPessoaBean.pessoaSelecionada.ativo ? 'Ativo' : 'Inativo'}" />
                 </p:panelGrid>
 
-                <p:separator />
+                <p:separator/>
 
-                <!-- Botões de Ação -->
-                <p:commandButton value="Limpar" action="#{consultaPessoaBean.limparAlteracoes}" update="@form"
-                                 icon="pi pi-refresh" styleClass="ui-button-secondary" />
+                <!-- Ações -->
+                <p:commandButton value="Limpar"
+                                 action="#{consultaPessoaBean.limparAlteracoes}"
+                                 update="@form"
+                                 icon="pi pi-refresh"
+                                 styleClass="ui-button-secondary" />
 
-                <!-- Botão que abre o modal de confirmação (nosso novo modal usa widgetVar 'exclusionConfirmDialog') -->
-                <p:commandButton value="Excluir" onclick="PF('exclusionConfirmDialog').show(); return false;"
-                                 icon="pi pi-trash" styleClass="ui-button-danger" />
+                <p:commandButton value="Excluir"
+                                 onclick="PF('exclusionConfirmDialog').show(); return false;"
+                                 icon="pi pi-trash"
+                                 styleClass="ui-button-danger" />
+
+                <p:commandButton value="#{consultaPessoaBean.pessoaSelecionada.ativo ? 'Inativar' : 'Ativar'}"
+                                 action="#{consultaPessoaBean.alternarStatus}"
+                                 update="@form"
+                                 icon="pi pi-power-off"
+                                 styleClass="ui-button-warning" />
+
             </p:panel>
 
-            <!-- Modal de Sucesso para Exclusão -->
-            <p:dialog widgetVar="successDialog" header="Sucesso" modal="true" closable="false" resizable="false">
-                <h:outputText value="Exclusão realizada com sucesso!" />
+            <p:dialog widgetVar="successDialog" header="Sucesso"
+                      modal="true" closable="false" resizable="false">
+                <h:outputText value="Operação realizada com sucesso!" />
                 <f:facet name="footer">
                     <p:commandButton value="Ok"
                                      action="#{consultaPessoaBean.atualizarConsulta}"

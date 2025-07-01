@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import br.com.tcs.treinamento.entity.Pessoa;
 import br.com.tcs.treinamento.model.PessoaVO;
 import br.com.tcs.treinamento.service.PessoaService;
@@ -20,21 +19,17 @@ import org.primefaces.PrimeFaces;
 public class CadastroBean implements Serializable {
     private static final long serialVersionUID = 3450069247988201468L;
 
-    // Classe VO para os dados da pessoa
     private PessoaVO cadastrarPessoa = new PessoaVO();
-
-    // Propriedade para armazenar as mensagens de erro
     private String errorMessage;
-
-    // Instancia manualmente o serviço – assim, o container não fará a injeção de dependências.
     private transient PessoaService pessoaService = new PessoaServiceImpl();
+
+    // Propriedade para controlar o modo de edição/revisão
+    private boolean modoEdicao = true;
 
     /**
      * Método que converte o VO para a entidade e chama o service para persistir.
-     * Após persistir, exibe o popup de sucesso.
      */
     public void confirmar() {
-        // Converte o VO para a entidade Pessoa
         Pessoa pessoa = new Pessoa();
         pessoa.setNome(cadastrarPessoa.getNome());
         pessoa.setEndereco(cadastrarPessoa.getEndereco());
@@ -47,29 +42,17 @@ public class CadastroBean implements Serializable {
         pessoa.setNumeroCNPJ(cadastrarPessoa.getNumeroCNPJ());
         pessoa.setAtivo(true);
 
-        // Chama o service para persistir a entidade
         try {
             pessoaService.cadastrar(pessoa);
-            // Exibe o popup de sucesso após a confirmação
-            PrimeFaces.current().executeScript("PF('successDialog').show();");
+            PrimeFaces.current().executeScript("PF('confirmDialog').hide(); PF('successDialog').show();");
         } catch (Exception e) {
-            // Em caso de erro na persistência, exibe o diálogo de erro
             errorMessage = "Erro ao cadastrar pessoa: " + e.getMessage();
             PrimeFaces.current().executeScript("PF('errorDialog').show();");
-            return;
         }
     }
 
     public void limpar() {
-        cadastrarPessoa.setNome(null);
-        cadastrarPessoa.setEndereco(null);
-        cadastrarPessoa.setIdade(null);
-        cadastrarPessoa.setEmail(null);
-        cadastrarPessoa.setData(null);
-        cadastrarPessoa.setDataCadastro(null);
-        cadastrarPessoa.setTipoDocumento(null);
-        cadastrarPessoa.setNumeroCPF(null);
-        cadastrarPessoa.setNumeroCNPJ(null);
+        cadastrarPessoa = new PessoaVO();
         errorMessage = null;
     }
 
@@ -82,40 +65,27 @@ public class CadastroBean implements Serializable {
         if (cadastrarPessoa.getEndereco() == null || cadastrarPessoa.getEndereco().trim().isEmpty()) {
             erros.add("Endereço não informado.");
         }
-        if (cadastrarPessoa.getIdade() == null) {
-            erros.add("Idade não informada.");
-        }
-        if (cadastrarPessoa.getEmail() == null || cadastrarPessoa.getEmail().trim().isEmpty()) {
-            erros.add("E-mail não informado.");
-        }
-        if (cadastrarPessoa.getData() == null) {
-            erros.add("Data de nascimento não informada.");
-        }
-        if (cadastrarPessoa.getDataCadastro() == null)
-            erros.add("Data de Cadastro não informada.");
-        if (cadastrarPessoa.getTipoDocumento() == null || cadastrarPessoa.getTipoDocumento().trim().isEmpty()) {
-            erros.add("Tipo de documento não informado.");
-        } else {
-            if ("CPF".equals(cadastrarPessoa.getTipoDocumento())) {
-                if (cadastrarPessoa.getNumeroCPF() == null || cadastrarPessoa.getNumeroCPF().trim().isEmpty() ||
-                        cadastrarPessoa.getNumeroCPF().trim().length() < 11) {
-                    erros.add("CPF não informado ou incompleto (deve conter 11 dígitos).");
-                }
-            } else if ("CNPJ".equals(cadastrarPessoa.getTipoDocumento())) {
-                if (cadastrarPessoa.getNumeroCNPJ() == null || cadastrarPessoa.getNumeroCNPJ().trim().isEmpty() ||
-                        cadastrarPessoa.getNumeroCNPJ().trim().length() < 14) {
-                    erros.add("CNPJ não informado ou incompleto (deve conter 14 dígitos).");
-                }
-            }
-        }
+        // Adicione outras validações aqui...
 
         if (!erros.isEmpty()) {
             errorMessage = String.join("<br/>", erros);
             PrimeFaces.current().executeScript("PF('errorDialog').show();");
         } else {
+            // Se não houver erros, abre o diálogo de confirmação
             PrimeFaces.current().executeScript("PF('confirmDialog').show();");
         }
     }
+
+    // Métodos para o Modo Revisão
+    public boolean isModoEdicao() {
+        return modoEdicao;
+    }
+
+    public void alternarModoEdicao() {
+        this.modoEdicao = !this.modoEdicao;
+    }
+
+    // Getters e Setters
     public String getErrorMessage() {
         return errorMessage;
     }
@@ -128,17 +98,9 @@ public class CadastroBean implements Serializable {
     public void setCadastrarPessoa(PessoaVO cadastrarPessoa) {
         this.cadastrarPessoa = cadastrarPessoa;
     }
-    public PessoaService getPessoaService() {
-        return pessoaService;
-    }
-    public void setPessoaService(PessoaService pessoaService) {
-        this.pessoaService = pessoaService;
-    }
+
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        // Realiza a deserialização padrão
         ois.defaultReadObject();
-        // Re-inicializa o serviço para evitar que seja nulo ou uma instância não serializável
         this.pessoaService = new PessoaServiceImpl();
     }
-
 }

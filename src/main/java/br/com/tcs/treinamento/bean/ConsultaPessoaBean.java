@@ -93,6 +93,62 @@ public class ConsultaPessoaBean implements Serializable {
         }
     }
 
+    public String excluirPessoa() {
+        try {
+            pessoaService.excluir(pessoaSelecionada);
+            pessoaSelecionada = null;
+            return "consultaPessoas?faces-redirect=true"; // ← volta para lista após excluir
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir", e.getMessage()));
+            return null;
+        }
+    }
+
+    public void alternarStatus() {
+        if (pessoaSelecionada != null) {
+            pessoaSelecionada.setAtivo(!Boolean.TRUE.equals(pessoaSelecionada.getAtivo()));
+            pessoaService.atualizar(pessoaSelecionada);
+            pessoas = pessoaService.listar();
+        }
+    }
+
+    public void validarCampos() {
+        List<String> erros = new ArrayList<>();
+
+        if (pessoaSelecionada.getNome() == null || pessoaSelecionada.getNome().trim().isEmpty()) {
+            erros.add("Nome não informado.");
+        }
+        if (pessoaSelecionada.getEndereco() == null || pessoaSelecionada.getEndereco().trim().isEmpty()) {
+            erros.add("Endereço não informado.");
+        }
+
+        // Adicione outras validações conforme necessidade
+
+        if (!erros.isEmpty()) {
+            errorMessage = String.join("<br/>", erros);
+            PrimeFaces.current().executeScript("PF('errorDialog').show();");
+        } else {
+            PrimeFaces.current().executeScript("PF('confirmDialog').show();");
+        }
+    }
+
+    public void confirmar() {
+        try {
+            pessoaService.atualizar(pessoaSelecionada);
+            PrimeFaces.current().executeScript("PF('confirmDialog').hide(); PF('successDialog').show();");
+        } catch (Exception e) {
+            errorMessage = "Erro ao atualizar cadastro: " + e.getMessage();
+            PrimeFaces.current().executeScript("PF('errorDialog').show();");
+        }
+    }
+
+    public void limpar() {
+        limparAlteracoes(); // reutiliza o método existente
+        errorMessage = null;
+    }
+
+
     public void enviarEmailComMensagem() {
         if (pessoaSelecionada == null || pessoaSelecionada.getEmail() == null || pessoaSelecionada.getEmail().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,

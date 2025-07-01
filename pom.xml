@@ -71,6 +71,17 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.primefaces</groupId>
+      <artifactId>primefaces</artifactId>
+      <version>10.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.primefaces.extensions</groupId>
+      <artifactId>primefaces-extensions</artifactId>
+      <version>10.0.0</version>
+    </dependency>
     <!-- Dependência do H2 Database -->
     <dependency>
       <groupId>com.h2database</groupId>
@@ -97,6 +108,14 @@
       <version>2.0</version>
       <scope>provided</scope>
     </dependency>
+
+    <!--  REMOVER DEPOIS  -->
+    <dependency>
+      <groupId>org.primefaces</groupId>
+      <artifactId>primefaces</artifactId>
+      <version>12.0.0</version> <!-- ou superior, como 13.0.3 -->
+    </dependency>
+
 
   </dependencies>
 

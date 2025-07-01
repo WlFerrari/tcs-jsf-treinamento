@@ -6,98 +6,110 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:define name="title">
-        Cadastro de Pessoa
+        Alteração de Pessoa
     </ui:define>
 
     <ui:define name="content">
+
+        <!-- Script de máscara invertida para CPF/CNPJ -->
+        <h:outputScript library="primefaces" name="inputmask/inputmask.js"/>
+        <script>
+            function aplicarInputInvertido(idCampo, tipo) {
+                let mascara = tipo === 'CPF' ? '999.999.999-99' : '99.999.999/9999-99';
+                Inputmask({
+                    mask: mascara,
+                    numericInput: true,
+                    rightAlign: false,
+                    placeholder: '0',
+                    showMaskOnHover: false
+                }).mask(document.getElementById(idCampo));
+            }
+        </script>
+
         <h:form id="formCadastro">
-            <!-- Inclui o modal (confirmarModel.xhtml) para reutilização -->
-            <ui:include src="/model/confirmarModel.xhtml" >
+            <ui:include src="/model/confirmarModel.xhtml">
                 <ui:param name="modalBean" value="#{consultaPessoaBean}"/>
             </ui:include>
 
-            <p:panel header="Formulário de alteração de cadastro" style="width:600px;">
-                <!-- Mensagens gerais de erro -->
+            <p:panel header="Formulário de Alteração de Pessoa" style="width:600px;">
                 <p:messages showDetail="true" closable="true" />
 
-                <!-- Formulário com painel de duas colunas -->
-                <p:panelGrid columns="2" columnClasses="label,value" style="width:100%; margin-bottom:1em;">
-                    <p:outputLabel for="nome" value="Nome Completo:"
-                                   style="text-align: left; white-space: nowrap;" />
-                    <p:inputText id="nome" value="#{consultaPessoaBean.pessoaSelecionada.nome}"
-                                 style="width:100%;" />
+                <p:panelGrid id="gridFormulario" columns="2" columnClasses="label,value" style="width:100%; margin-bottom:1em;">
 
-                    <p:outputLabel for="endereco" value="Endereço:"
-                                   style="text-align: left; white-space: nowrap;" />
-                    <p:inputText id="endereco" value="#{consultaPessoaBean.pessoaSelecionada.endereco}"
-                                 style="width:100%;" />
+                    <p:outputLabel for="nome" value="Nome Completo:" />
+                    <p:inputText id="nome" value="#{consultaPessoaBean.pessoaSelecionada.nome}" style="width:100%;" />
 
-                    <p:outputLabel for="idade" value="Idade:" styleClass="label" />
-                    <p:inputText id="idade" value="#{consultaPessoaBean.pessoaSelecionada.idade}"
-                                 style="width:4em;" />
+                    <p:outputLabel for="endereco" value="Endereço:" />
+                    <p:inputText id="endereco" value="#{consultaPessoaBean.pessoaSelecionada.endereco}" style="width:100%;" />
 
-                    <p:outputLabel for="email" value="E-mail:" styleClass="label" />
-                    <p:inputText id="email" value="#{consultaPessoaBean.pessoaSelecionada.email}"
-                                 style="width:100%;" />
+                    <p:outputLabel for="idade" value="Idade:" />
+                    <p:inputText id="idade" value="#{consultaPessoaBean.pessoaSelecionada.idade}" style="width:4em;" />
 
-                    <p:outputLabel for="data" value="Data de Nascimento:" styleClass="label" />
-                    <p:calendar id="data" value="#{consultaPessoaBean.pessoaSelecionada.data}"
-                                pattern="dd/MM/yyyy" showIcon="true" />
+                    <p:outputLabel for="email" value="E-mail:" />
+                    <p:inputText id="email" value="#{consultaPessoaBean.pessoaSelecionada.email}" style="width:100%;" />
 
-                    <p:outputLabel for="dataCadastro" value="Data de Cadastro:" styleClass="label" />
-                    <p:calendar id="dataCadastro" value="#{consultaPessoaBean.pessoaSelecionada.dataCadastro}"
-                                pattern="dd/MM/yyyy" showIcon="true" />
+                    <p:outputLabel for="data" value="Data de Nascimento:" />
+                    <p:calendar id="data" value="#{consultaPessoaBean.pessoaSelecionada.data}" pattern="dd/MM/yyyy" showIcon="true" />
 
-                    <p:outputLabel for="tipo" value="Tipo de Documento:" styleClass="label" />
-                    <p:selectOneMenu id="tipo" value="#{consultaPessoaBean.pessoaSelecionada.tipoDocumento}"
-                                     style="width:100%;">
+                    <p:outputLabel for="dataCadastro" value="Data de Cadastro:" />
+                    <p:calendar id="dataCadastro" value="#{consultaPessoaBean.pessoaSelecionada.dataCadastro}" pattern="dd/MM/yyyy" showIcon="true" />
+
+                    <p:outputLabel for="tipo" value="Tipo de Documento:" />
+                    <p:selectOneMenu id="tipo" value="#{consultaPessoaBean.pessoaSelecionada.tipoDocumento}" style="width:100%;">
                         <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
                         <f:selectItem itemLabel="CPF" itemValue="CPF" />
                         <f:selectItem itemLabel="CNPJ" itemValue="CNPJ" />
                         <p:ajax update="docPanel" process="@this" />
                     </p:selectOneMenu>
 
-                    <!-- Bloco para CPF / CNPJ -->
-                    <h:panelGroup id="docPanel" layout="block">
-                        <!-- Campo CPF: exibido se o tipo for CPF -->
-                        <p:outputLabel for="cpf" value="CPF:" styleClass="label"
-                                       style="#{consultaPessoaBean.pessoaSelecionada.tipoDocumento eq 'CPF' ? '' : 'display:none;'}" />
-                        <p:inputMask id="cpf" value="#{consultaPessoaBean.pessoaSelecionada.numeroCPF}"
-                                     mask="999.999.999-99"
-                                     autoClear="true" unmask="true"
-                                     disabled="#{consultaPessoaBean.pessoaSelecionada.tipoDocumento ne 'CPF'}"
-                                     style="width:100%; #{consultaPessoaBean.pessoaSelecionada.tipoDocumento eq 'CPF' ? '' : 'display:none;'}" />
+                    <h:panelGroup id="docPanel" layout="block" colspan="2">
 
-                        <!-- Campo CNPJ: exibido se o tipo for CNPJ -->
-                        <p:outputLabel for="cnpj" value="CNPJ:" styleClass="label"
-                                       style="#{consultaPessoaBean.pessoaSelecionada.tipoDocumento eq 'CNPJ' ? '' : 'display:none;'}" />
-                        <p:inputMask id="cnpj" value="#{consultaPessoaBean.pessoaSelecionada.numeroCNPJ}"
-                                     mask="99.999.999/9999-99"
-                                     autoClear="true" unmask="true"
-                                     disabled="#{consultaPessoaBean.pessoaSelecionada.tipoDocumento ne 'CNPJ'}"
-                                     style="width:100%; #{consultaPessoaBean.pessoaSelecionada.tipoDocumento eq 'CNPJ' ? '' : 'display:none;'}" />
+                        <!-- CPF -->
+                        <h:panelGroup rendered="#{consultaPessoaBean.pessoaSelecionada.tipoDocumento eq 'CPF'}">
+                            <div class="p-grid p-fluid" style="margin-top: 10px;">
+                                <div class="p-col-3">
+                                    <p:outputLabel for="cpf" value="CPF:" />
+                                </div>
+                                <div class="p-col-9">
+                                    <p:inputText id="cpf" value="#{consultaPessoaBean.pessoaSelecionada.numeroCPF}"
+                                                 onfocus="aplicarInputInvertido(this.id, 'CPF')"
+                                                 style="width: 100%;" />
+                                </div>
+                            </div>
+                        </h:panelGroup>
+
+                        <!-- CNPJ -->
+                        <h:panelGroup rendered="#{consultaPessoaBean.pessoaSelecionada.tipoDocumento eq 'CNPJ'}">
+                            <div class="p-grid p-fluid" style="margin-top: 10px;">
+                                <div class="p-col-3">
+                                    <p:outputLabel for="cnpj" value="CNPJ:" />
+                                </div>
+                                <div class="p-col-9">
+                                    <p:inputText id="cnpj" value="#{consultaPessoaBean.pessoaSelecionada.numeroCNPJ}"
+                                                 onfocus="aplicarInputInvertido(this.id, 'CNPJ')"
+                                                 style="width: 100%;" />
+                                </div>
+                            </div>
+                        </h:panelGroup>
+
                     </h:panelGroup>
                 </p:panelGrid>
 
                 <p:separator/>
 
                 <p:commandButton value="Limpar"
-                                 action="#{consultaPessoaBean.limpar}"
+                                 action="#{consultaPessoaBean.limparAlteracoes}"
                                  update="@form"
                                  icon="pi pi-refresh"
                                  styleClass="ui-button-secondary" />
 
-                <!-- Botão Salvar chama o método de validação na bean.
-                     Se a validação for bem-sucedida, o método validarCampos() invoca o modal de confirmação. -->
                 <p:commandButton value="Salvar"
                                  action="#{consultaPessoaBean.validarCampos}"
                                  update="@form"
                                  icon="pi pi-save"
                                  ajax="true" />
-
             </p:panel>
 
-            <!-- Diálogo para exibir a lista de campos não preenchidos -->
             <p:dialog widgetVar="errorDialog" header="Campos não preenchidos"
                       modal="true" closable="false" resizable="false">
                 <h:outputText value="#{consultaPessoaBean.errorMessage}" escape="false" />
@@ -107,7 +119,7 @@
                                      type="button" />
                 </f:facet>
             </p:dialog>
-            <!-- Diaglogo de sucesso-->
+
             <p:dialog widgetVar="successDialog" header="Sucesso"
                       modal="true" closable="false" resizable="false">
                 <h:outputText value="Cadastro alterado com sucesso!" />
@@ -122,6 +134,6 @@
     </ui:define>
 
     <ui:define name="footer">
-        Rodapé – Página de Cadastro
+        Rodapé – Página de Alteração
     </ui:define>
 </ui:composition>
